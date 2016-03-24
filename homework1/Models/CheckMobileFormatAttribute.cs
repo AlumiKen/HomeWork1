@@ -14,10 +14,12 @@ namespace homework1.Models
 
         public override bool IsValid(object value)
         {
-            var strPhoneNumber = (string)value;
+            var strPhoneNumber = Convert.ToString(value);
             var pattern = @"\d{4}-\d{6}";
             Regex Reg = new Regex(pattern);
-            return Reg.IsMatch(strPhoneNumber);
+            var match = Reg.Matches(strPhoneNumber);
+            var match2 = Reg.Replace(strPhoneNumber, "");            
+            return match.Count == 1 && String.IsNullOrEmpty(match2);
         }
     }
 }

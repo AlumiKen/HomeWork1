@@ -28,7 +28,7 @@ namespace homework1.Controllers
             //var 客戶銀行資訊 = db.Database.SqlQuery<客戶銀行資訊>(
             //    @"SELECT * FROM dbo.客戶銀行資訊 WHERE 銀行名稱 LIKE @p0 OR 銀行代碼 LIKE @p0 OR 分行代碼 LIKE @p0 OR 帳戶名稱 LIKE @p0 OR 帳戶號碼 LIKE @p0", "%" + key + "%").OrderBy(p => p.帳戶名稱);
             var 客戶銀行資訊 = db.客戶銀行資訊.Where(p => p.IsDelete == false)
-                .Where(p => p.銀行名稱.Contains(key) || p.帳戶名稱.Contains(key) || p.帳戶號碼.Contains(key) || p.銀行代碼.ToString().Contains(key) || p.分行代碼.ToString().Contains(key))
+                .Where(p => p.銀行名稱.Contains(key) || p.帳戶名稱.Contains(key) || p.帳戶號碼.Contains(key) || p.銀行代碼.ToString().Contains(key) || p.分行代碼.ToString().Contains(key) || p.客戶資料.客戶名稱.Contains(key))
                 .Include(客 => 客.客戶資料)
                 .OrderBy(p => p.帳戶名稱);
             return View(客戶銀行資訊);
@@ -52,7 +52,7 @@ namespace homework1.Controllers
         // GET: 客戶銀行資訊/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱");
             return View();
         }
 
@@ -86,7 +86,7 @@ namespace homework1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 
@@ -103,7 +103,7 @@ namespace homework1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 

@@ -28,7 +28,7 @@ namespace homework1.Controllers
             //var 客戶聯絡人 = db.Database.SqlQuery<客戶聯絡人>(
             //    @"SELECT * FROM dbo.客戶聯絡人 WHERE 職稱 LIKE @p0 OR 姓名 LIKE @p0", "%" + key + "%").OrderBy(p => p.姓名);
             var 客戶聯絡人 = db.客戶聯絡人.Where(p => p.IsDelete == false)
-                .Where(p => p.職稱.Contains(key) || p.姓名.Contains(key))
+                .Where(p => p.職稱.Contains(key) || p.姓名.Contains(key) || p.客戶資料.客戶名稱.Contains(key))
                 .Include(客 => 客.客戶資料)
                 .OrderBy(p => p.姓名);
             return View(客戶聯絡人);
@@ -52,7 +52,7 @@ namespace homework1.Controllers
         // GET: 客戶聯絡人/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱");
             return View();
         }
 
@@ -86,7 +86,7 @@ namespace homework1.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -103,7 +103,7 @@ namespace homework1.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
