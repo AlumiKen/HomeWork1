@@ -7,27 +7,26 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using homework1.Models;
+using System.IO;
 
 namespace homework1.Controllers
 {
-    public class 客戶聯絡人Controller : Controller
+    public class 客戶聯絡人Controller : BaseController
     {
-        private 客戶資料Entities db = new 客戶資料Entities();
+        //private 客戶資料Entities db = new 客戶資料Entities();
 
         // GET: 客戶聯絡人
         public ActionResult Index()
         {
-            var 客戶聯絡人 = db.客戶聯絡人.Where(p => p.IsDelete == false).Include(客 => 客.客戶資料).OrderBy(p => p.姓名);
+            var 客戶聯絡人 = repo客戶聯絡人.All().Include(客 => 客.客戶資料).OrderBy(p => p.姓名);
             return View(客戶聯絡人.ToList());
         }
 
         //搜尋
         [HttpPost]
         public ActionResult Index(string key)
-        {
-            //var 客戶聯絡人 = db.Database.SqlQuery<客戶聯絡人>(
-            //    @"SELECT * FROM dbo.客戶聯絡人 WHERE 職稱 LIKE @p0 OR 姓名 LIKE @p0", "%" + key + "%").OrderBy(p => p.姓名);
-            var 客戶聯絡人 = db.客戶聯絡人.Where(p => p.IsDelete == false)
+        {            
+            var 客戶聯絡人 = repo客戶聯絡人.All()
                 .Where(p => p.職稱.Contains(key) || p.姓名.Contains(key) || p.客戶資料.客戶名稱.Contains(key))
                 .Include(客 => 客.客戶資料)
                 .OrderBy(p => p.姓名);
@@ -41,7 +40,7 @@ namespace homework1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
+            客戶聯絡人 客戶聯絡人 = repo客戶聯絡人.Find(id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
@@ -52,7 +51,7 @@ namespace homework1.Controllers
         // GET: 客戶聯絡人/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(repo客戶資料.All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -65,12 +64,12 @@ namespace homework1.Controllers
         {
             if (ModelState.IsValid)
             {                
-                db.客戶聯絡人.Add(客戶聯絡人);
-                db.SaveChanges();
+                repo客戶聯絡人.Add(客戶聯絡人);
+                repo客戶聯絡人.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(repo客戶資料.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -81,12 +80,12 @@ namespace homework1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
+            客戶聯絡人 客戶聯絡人 = repo客戶聯絡人.Find(id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(repo客戶資料.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -99,11 +98,12 @@ namespace homework1.Controllers
         {
             if (ModelState.IsValid)
             {                
+                var db = (客戶資料Entities)repo客戶聯絡人.UnitOfWork.Context;
                 db.Entry(客戶聯絡人).State = EntityState.Modified;
-                db.SaveChanges();
+                repo客戶聯絡人.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料.Where(p => p.IsDelete == false), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(repo客戶資料.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -114,7 +114,7 @@ namespace homework1.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
+            客戶聯絡人 客戶聯絡人 = repo客戶聯絡人.Find(id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
@@ -127,9 +127,9 @@ namespace homework1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
-            客戶聯絡人.IsDelete = true;
-            db.SaveChanges();
+            客戶聯絡人 客戶聯絡人 = repo客戶聯絡人.Find(id);
+            repo客戶聯絡人.Delete(客戶聯絡人);
+            repo客戶聯絡人.UnitOfWork.Commit();
             return RedirectToAction("Index");
         }
 
@@ -137,9 +137,52 @@ namespace homework1.Controllers
         {
             if (disposing)
             {
+                var db = (客戶資料Entities)repo客戶聯絡人.UnitOfWork.Context;
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult 客戶聯絡人partialView(int id)
+        {
+            var 客戶聯絡人 = repo客戶聯絡人.All().Where(p => p.客戶Id == id).Include(客 => 客.客戶資料).OrderBy(p => p.姓名);
+            return PartialView(客戶聯絡人);
+        }
+
+        public FileResult 匯出聯絡人資料()
+        {
+            //建立Excel文件
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //新增sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //取得匯出資料List
+            List<客戶聯絡人> dataList = repo客戶聯絡人.All().ToList();
+            //给sheet1添加第一行的標題列
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("職稱");
+            row1.CreateCell(1).SetCellValue("姓名");
+            row1.CreateCell(2).SetCellValue("Email");
+            row1.CreateCell(3).SetCellValue("手機");
+            row1.CreateCell(4).SetCellValue("地址電話");
+            row1.CreateCell(5).SetCellValue("Email");
+            row1.CreateCell(6).SetCellValue("客戶名稱");
+            //將資料逐筆寫入
+            for (int i = 0; i < dataList.Count; i++)
+            {
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                rowtemp.CreateCell(0).SetCellValue(dataList[i].職稱.ToString());
+                rowtemp.CreateCell(1).SetCellValue(dataList[i].姓名.ToString());
+                rowtemp.CreateCell(2).SetCellValue(dataList[i].Email.ToString());
+                rowtemp.CreateCell(3).SetCellValue(dataList[i].手機.ToString());
+                rowtemp.CreateCell(4).SetCellValue(dataList[i].電話.ToString());
+                rowtemp.CreateCell(5).SetCellValue(dataList[i].Email.ToString());
+                rowtemp.CreateCell(6).SetCellValue(dataList[i].客戶資料.客戶名稱.ToString());
+            }
+
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", "客戶聯絡人清單.xls");
         }
     }
 }

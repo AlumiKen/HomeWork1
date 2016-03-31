@@ -1,0 +1,68 @@
+﻿@model IEnumerable<homework1.Models.客戶聯絡人>
+
+<hr />
+
+@{
+    var data = Model.ToArray();
+}
+
+@using (Html.BeginForm("Details", "客戶資料", new { id = data[0].客戶Id }))
+{
+    if (data.Length > 0)
+    {
+        <h4>客戶聯絡人</h4>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.職稱)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.姓名)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.手機)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.電話)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.客戶資料.客戶名稱)
+                </th>
+                <th></th>
+            </tr>
+
+            @for (int i = 0; i < data.Length; i++)
+            {
+                @Html.HiddenFor(modelItem => data[i].Id)
+                <tr>
+                    <td>
+                        @Html.EditorFor(modelItem => data[i].職稱)
+                        @Html.ValidationMessageFor(modelItem => data[i].職稱, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => data[i].姓名)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => data[i].Email)
+                    </td>
+                    <td>
+                        @Html.EditorFor(modelItem => data[i].手機)
+                        @Html.ValidationMessageFor(modelItem => data[i].職稱, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.EditorFor(modelItem => data[i].電話)
+                        @Html.ValidationMessageFor(modelItem => data[i].職稱, "", new { @class = "text-danger" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => data[i].客戶資料.客戶名稱)
+                    </td>
+                </tr>
+            }
+
+        </table>
+        <input type="submit" value="批次更新" />
+    }
+}
