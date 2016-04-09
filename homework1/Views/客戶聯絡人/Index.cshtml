@@ -51,25 +51,28 @@
         </tr>
     </table>  
 </p>
+
+@Html.Hidden("sortOrder", TempData["currentSort"])
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().職稱)
+            @Html.ActionLink("職稱", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["職稱sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().姓名)
+            @Html.ActionLink("姓名", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["姓名sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+            @Html.ActionLink("Email", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["Emailsort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().手機)
+            @Html.ActionLink("手機", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["手機sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().電話)
+            @Html.ActionLink("電話", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["電話sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶資料.客戶名稱)
+            @Html.ActionLink("客戶名稱", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["客戶名稱sort"] })
         </th>
         <th></th>
     </tr>
@@ -105,5 +108,5 @@
 
 </table>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page, keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"] }))
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"], sortOrder = TempData["currentSort"] }))
 }

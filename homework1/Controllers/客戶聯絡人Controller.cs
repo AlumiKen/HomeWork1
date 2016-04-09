@@ -20,7 +20,7 @@ namespace homework1.Controllers
 
         // GET: 客戶聯絡人
         [HandleError(ExceptionType = typeof(ArgumentException), View = "CustomError")]
-        public ActionResult Index(string 職稱列表, int page = 1, string keyword = "")
+        public ActionResult Index(string 職稱列表, string sortOrder, int page = 1, string keyword = "")
         {
             if (keyword.Contains("'"))
             {
@@ -34,6 +34,14 @@ namespace homework1.Controllers
 
             int currentPage = page < 1 ? 1 : page;
 
+            TempData["currentSort"] = sortOrder;
+            TempData["職稱sort"] = sortOrder == "職稱" ? "職稱 desc" : "職稱";
+            TempData["姓名sort"] = sortOrder == "姓名" ? "姓名 desc" : "姓名";
+            TempData["Emailsort"] = sortOrder == "Email" ? "Email desc" : "Email";
+            TempData["電話sort"] = sortOrder == "電話" ? "電話 desc" : "電話";
+            TempData["手機sort"] = sortOrder == "手機" ? "手機 desc" : "手機";
+            TempData["客戶名稱sort"] = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
+
             TempData["keyword"] = keyword;
             TempData["職稱列表"] = 職稱列表;
 
@@ -43,6 +51,25 @@ namespace homework1.Controllers
             if (!string.IsNullOrEmpty(職稱列表))
             {
                 data = data.Where(p => p.職稱 == 職稱列表).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                if (sortOrder.Contains("客戶名稱"))
+                {
+                    if (sortOrder.Contains("desc"))
+                    {
+                        data = data.OrderByDescending(p => p.客戶資料.客戶名稱).ToList();
+                    }
+                    else
+                    {
+                        data = data.OrderBy(p => p.客戶資料.客戶名稱).ToList();
+                    }
+                }
+                else
+                {
+                    data = data.OrderBy(sortOrder).ToList();
+                }
             }
 
             var result = data.ToPagedList(currentPage, pageSize);

@@ -19,20 +19,50 @@ namespace homework1.Controllers
         private int pageSize = 2;
 
         // GET: 客戶資料
-        public ActionResult Index(int? 客戶分類Id, int page = 1, string keyword = "")
+        public ActionResult Index(int? 客戶分類Id, string sortOrder, int page = 1, string keyword = "")
         {
-            int currentPage = page < 1 ? 1 : page;           
-            
+            int currentPage = page < 1 ? 1 : page;
+
+            TempData["currentSort"] = sortOrder;
+            TempData["客戶名稱sort"] = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
+            TempData["統一編號sort"] = sortOrder == "統一編號" ? "統一編號 desc" : "統一編號";
+            TempData["電話sort"] = sortOrder == "電話" ? "電話 desc" : "電話";
+            TempData["傳真sort"] = sortOrder == "傳真" ? "傳真 desc" : "傳真";
+            TempData["地址sort"] = sortOrder == "地址" ? "地址 desc" : "地址";
+            TempData["Emailsort"] = sortOrder == "Email" ? "Email desc" : "Email";
+            TempData["Accountsort"] = sortOrder == "Account" ? "Account desc" : "Account";
+            TempData["客戶分類名稱sort"] = sortOrder == "客戶分類名稱" ? "客戶分類名稱 desc" : "客戶分類名稱";
+
             //把查詢的參數存到TempData
+            TempData["page"] = page;
             TempData["keyword"] = keyword;
             TempData["客戶分類Id"] = 客戶分類Id;
 
             var data = repo客戶資料.searchKeyword(keyword)
-                .OrderBy(p => p.客戶名稱).ToList();            
+                .OrderBy(p => p.客戶名稱).ToList();
             
             if (客戶分類Id.HasValue)
             {                
                 data = data.Where(p => p.客戶分類Id == 客戶分類Id).ToList();                
+            }
+
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                if (sortOrder.Contains("客戶分類名稱"))
+                {
+                    if (sortOrder.Contains("desc"))
+                    {
+                        data = data.OrderByDescending(p => p.客戶分類.客戶分類名稱).ToList();
+                    }
+                    else
+                    {
+                        data = data.OrderBy(p => p.客戶分類.客戶分類名稱).ToList();
+                    }
+                }
+                else
+                {                
+                    data = data.OrderBy(sortOrder).ToList();
+                }
             }
             
             var result = data.ToPagedList(currentPage, pageSize);

@@ -51,31 +51,39 @@
         </tr>
      </table>        
 </p>
+
+    @Html.Hidden("sortOrder", TempData["currentSort"])
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶名稱)
+        <th>            
+            @Html.ActionLink("客戶名稱", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["客戶名稱sort"] })
+        </th>
+        <th>            
+            @Html.ActionLink("統一編號", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["統一編號sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().統一編號)
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().電話)*@
+            @Html.ActionLink("電話", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["電話sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().電話)
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().傳真)*@
+            @Html.ActionLink("傳真", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["傳真sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().傳真)
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().地址)*@
+            @Html.ActionLink("地址", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["地址sort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().地址)
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().Email)*@
+            @Html.ActionLink("Email", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["Emailsort"] })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().Account)
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().Account)*@
+            @Html.ActionLink("Account", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["Accountsort"] })
         </th>        
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶分類.客戶分類名稱)
+            @*@Html.DisplayNameFor(model => model.FirstOrDefault().客戶分類.客戶分類名稱)*@
+            @Html.ActionLink("客戶分類名稱", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["客戶分類名稱sort"] })
         </th>
         <th></th>
     </tr>
@@ -117,5 +125,5 @@
 
 </table>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page , keyword = TempData["keyword"],客戶分類Id = TempData["客戶分類Id"]}))
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page , keyword = TempData["keyword"],客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["currentSort"] }))
 }
