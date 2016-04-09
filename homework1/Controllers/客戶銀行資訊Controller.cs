@@ -11,6 +11,7 @@ using System.IO;
 
 namespace homework1.Controllers
 {
+    [Authorize(Roles = "board_admin")]
     public class 客戶銀行資訊Controller : BaseController
     {       
         // GET: 客戶銀行資訊

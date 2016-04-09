@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace homework1.Controllers
 {
+    [記錄Action執行時間]
     public class BaseController : Controller
     {
         protected 客戶資料Repository repo客戶資料 = RepositoryHelper.Get客戶資料Repository();

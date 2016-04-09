@@ -3,43 +3,43 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using homework1.Models;
 using System.IO;
+using PagedList;
 
 namespace homework1.Controllers
-{    
+{
+    [Authorize(Roles = "board_admin")]
     public class 客戶資料Controller : BaseController
-    {
-        //private 客戶資料Entities db = new 客戶資料Entities();
+    {        
+        private int pageSize = 2;
 
         // GET: 客戶資料
-        public ActionResult Index()
+        public ActionResult Index(int? 客戶分類Id, int page = 1, string keyword = "")
         {
-            var data = repo客戶資料.All().ToList();
-            ViewBag.客戶分類Id = new SelectList(repo客戶分類.All(), "Id", "客戶分類名稱");
-            return View(data);
-        }
+            int currentPage = page < 1 ? 1 : page;           
+            
+            //把查詢的參數存到TempData
+            TempData["keyword"] = keyword;
+            TempData["客戶分類Id"] = 客戶分類Id;
 
-        //搜尋
-        [HttpPost]
-        public ActionResult Index(string key, int? 客戶分類Id)
-        {
-            //var 客戶資料 = db.Database.SqlQuery<客戶資料>(
-            //    @"SELECT * FROM dbo.客戶資料 WHERE 客戶名稱 LIKE @p0 OR 統一編號 LIKE @p0 OR 地址 LIKE @p0", "%" + key + "%").OrderBy(p => p.客戶名稱);
-            var 客戶資料 = repo客戶資料.All()
-                .Where(p => p.客戶名稱.Contains(key) || p.統一編號.Contains(key) || p.地址.Contains(key))
-                .OrderBy(p => p.客戶名稱).ToList();
-
+            var data = repo客戶資料.searchKeyword(keyword)
+                .OrderBy(p => p.客戶名稱).ToList();            
+            
             if (客戶分類Id.HasValue)
-            {             
-                客戶資料 = 客戶資料.Where(p => p.客戶分類Id == 客戶分類Id.Value).ToList();
+            {                
+                data = data.Where(p => p.客戶分類Id == 客戶分類Id).ToList();                
             }
+            
+            var result = data.ToPagedList(currentPage, pageSize);
 
             ViewBag.客戶分類Id = new SelectList(repo客戶分類.All(), "Id", "客戶分類名稱", 客戶分類Id);
-            return View(客戶資料);
+
+            return View(result);
         }
 
         // GET: 客戶資料/Details/5
@@ -115,6 +115,7 @@ namespace homework1.Controllers
             return View(客戶資料);
         }
 
+        [Authorize(Roles = "gold_member")]
         // GET: 客戶資料/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -137,12 +138,22 @@ namespace homework1.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類Id")] 客戶資料 客戶資料)
+        [Authorize(Roles = "gold_member")]
+        public ActionResult Edit(int id, FormCollection form)
         {
-            if (ModelState.IsValid)
+            //[Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,客戶分類Id")] 客戶資料 客戶資料
+
+            var 客戶資料 = repo客戶資料.Find(id);            
+
+            if (客戶資料.Password != form["Password"])
             {
-                var db客戶資料 = repo客戶資料.UnitOfWork.Context;
-                db客戶資料.Entry(客戶資料).State = EntityState.Modified;
+                客戶資料.Password = repo客戶資料.HashPassword(form["Account"], form["Password"]);
+            }
+
+            if (TryUpdateModel(客戶資料, "Id,客戶名稱,統一編號,電話,傳真,地址,Email,Account,客戶分類Id".Split(new char[] { ',' })))
+            {
+                //var db客戶資料 = repo客戶資料.UnitOfWork.Context;
+                //db客戶資料.Entry(客戶資料).State = EntityState.Modified;
                 repo客戶資料.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
@@ -179,16 +190,6 @@ namespace homework1.Controllers
 
             repo客戶資料.UnitOfWork.Commit();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                var db客戶資料 = (客戶資料Entities)repo客戶資料.UnitOfWork.Context;
-                db客戶資料.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         //public ActionResult 搜尋客戶資料(string key)
@@ -238,6 +239,16 @@ namespace homework1.Controllers
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
             return File(ms, "application/vnd.ms-excel", "客戶資料清單.xls");
+        }        
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                var db客戶資料 = (客戶資料Entities)repo客戶資料.UnitOfWork.Context;
+                db客戶資料.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

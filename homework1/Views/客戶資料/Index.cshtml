@@ -1,11 +1,17 @@
-﻿@model IEnumerable<homework1.Models.客戶資料>
+﻿@model IPagedList<homework1.Models.客戶資料>
 
 @{
     ViewBag.Title = "Index";
 }
 
+@section scripts {
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+}
+
 <h2>客戶資料管理</h2>
 
+@using (Html.BeginForm("Index", "客戶資料", FormMethod.Post))
+{
 <p>    
     <table>
         <tr>
@@ -15,13 +21,11 @@
             <td>
                 關鍵字 : 
             </td>
-            <td>                
-                @using (Html.BeginForm("Index", "客戶資料", FormMethod.Post))
-                {                    
+            <td>                                
                     <table>
                         <tr>
                             <td>
-                                @Html.TextBox("key")
+                                @Html.TextBox("keyword")
                             </td>
                             <td>
                                 <table>
@@ -39,8 +43,7 @@
                                 <input type="submit" value="搜尋" class="btn btn-default" />
                             </td>                            
                         </tr>
-                    </table>                    
-                }
+                    </table>
             </td>
             <td>
                 @Html.ActionLink("匯出清單", "匯出客戶資料", "客戶資料")
@@ -51,25 +54,28 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.客戶名稱)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶名稱)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.統一編號)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().統一編號)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.電話)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().電話)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.傳真)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().傳真)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.地址)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().地址)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.客戶分類.客戶分類名稱)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Account)
+        </th>        
+        <th>
+            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶分類.客戶分類名稱)
         </th>
         <th></th>
     </tr>
@@ -96,6 +102,9 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Account)
+            </td>            
+            <td>
                 @Html.DisplayFor(modelItem => item.客戶分類.客戶分類名稱)
             </td>
             <td>
@@ -107,3 +116,6 @@
     }
 
 </table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page , keyword = TempData["keyword"],客戶分類Id = TempData["客戶分類Id"]}))
+}

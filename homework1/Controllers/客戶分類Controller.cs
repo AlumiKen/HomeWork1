@@ -10,6 +10,7 @@ using homework1.Models;
 
 namespace homework1.Controllers
 {
+    [Authorize(Roles = "board_admin")]
     public class 客戶分類Controller : Controller
     {
         private 客戶資料Entities db = new 客戶資料Entities();

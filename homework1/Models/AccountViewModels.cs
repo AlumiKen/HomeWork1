@@ -7,7 +7,7 @@ namespace homework1.Models
     {
         [Required]
         [Display(Name = "電子郵件")]
-        public string Email { get; set; }
+        public string Account { get; set; }
     }
 
     public class ExternalLoginListViewModel
@@ -49,9 +49,9 @@ namespace homework1.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "電子郵件")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "帳號")]
+        //[EmailAddress]
+        public string Account { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -65,9 +65,9 @@ namespace homework1.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "電子郵件")]
-        public string Email { get; set; }
+        //[EmailAddress]
+        [Display(Name = "帳號")]
+        public string Account { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} 的長度至少必須為 {2} 個字元。", MinimumLength = 6)]
@@ -84,9 +84,9 @@ namespace homework1.Models
     public class ResetPasswordViewModel
     {
         [Required]
-        [EmailAddress]
-        [Display(Name = "電子郵件")]
-        public string Email { get; set; }
+        //[EmailAddress]
+        [Display(Name = "帳號")]
+        public string Account { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} 的長度至少必須為 {2} 個字元。", MinimumLength = 6)]

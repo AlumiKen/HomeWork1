@@ -1,11 +1,17 @@
-﻿@model IEnumerable<homework1.Models.客戶聯絡人>
+﻿@model IPagedList<homework1.Models.客戶聯絡人>
 
 @{
     ViewBag.Title = "Index";
 }
 
+@section scripts {
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+}
+
 <h2>客戶聯絡人管理</h2>
 
+@using (Html.BeginForm("Index", "客戶聯絡人", FormMethod.Post))
+{
 <p>
     <table>
         <tr>
@@ -15,12 +21,29 @@
             <td>
                 關鍵字 :
             </td>
-            <td>
-                @using (Html.BeginForm("Index", "客戶聯絡人", FormMethod.Post))
-                {
-                    @Html.TextBox("key")
-                    <input type="submit" value="搜尋" class="btn btn-default" />
-                }
+            <td>                
+                    <table>
+                        <tr>
+                            <td>
+                                @Html.TextBox("keyword")
+                            </td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            | 職稱:
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("職稱列表", null, "全部", htmlAttributes: new { @class = "form-control" })
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <input type="submit" value="搜尋" class="btn btn-default" />
+                            </td>
+                        </tr>
+                    </table>                
             </td>
             <td>
                 @Html.ActionLink("匯出清單", "匯出聯絡人資料", "客戶聯絡人")
@@ -31,27 +54,28 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.職稱)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().職稱)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.姓名)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().姓名)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.手機)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().手機)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.電話)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().電話)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.客戶資料.客戶名稱)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().客戶資料.客戶名稱)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.職稱)
@@ -72,11 +96,14 @@
             @Html.DisplayFor(modelItem => item.客戶資料.客戶名稱)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
     </tr>
 }
 
 </table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, keyword = TempData["keyword"], 職稱列表 = TempData["職稱列表"] }))
+}

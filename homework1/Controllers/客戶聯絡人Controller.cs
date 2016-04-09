@@ -3,35 +3,55 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using homework1.Models;
 using System.IO;
+using PagedList;
 
 namespace homework1.Controllers
 {
+    [Authorize(Roles = "board_admin")]
     public class 客戶聯絡人Controller : BaseController
-    {
-        //private 客戶資料Entities db = new 客戶資料Entities();
+    {        
+        private int pageSize = 2;
 
         // GET: 客戶聯絡人
-        public ActionResult Index()
+        [HandleError(ExceptionType = typeof(ArgumentException), View = "CustomError")]
+        public ActionResult Index(string 職稱列表, int page = 1, string keyword = "")
         {
-            var 客戶聯絡人 = repo客戶聯絡人.All().Include(客 => 客.客戶資料).OrderBy(p => p.姓名);
-            return View(客戶聯絡人.ToList());
+            if (keyword.Contains("'"))
+            {
+                throw new ArgumentException("關鍵字含有特殊字元'");
+            }
+
+            if (keyword.Contains("@"))
+            {
+                throw new InvalidOperationException("關鍵字含有特殊字元@");
+            }
+
+            int currentPage = page < 1 ? 1 : page;
+
+            TempData["keyword"] = keyword;
+            TempData["職稱列表"] = 職稱列表;
+
+            var data = repo客戶聯絡人.searchKeyword(keyword)
+                .OrderBy(p => p.姓名).ToList();
+
+            if (!string.IsNullOrEmpty(職稱列表))
+            {
+                data = data.Where(p => p.職稱 == 職稱列表).ToList();
+            }
+
+            var result = data.ToPagedList(currentPage, pageSize);
+
+            ViewBag.職稱列表 = new SelectList(repo客戶聯絡人.get職稱列表(), "", "");
+
+            return View(result);
         }
 
-        //搜尋
-        [HttpPost]
-        public ActionResult Index(string key)
-        {            
-            var 客戶聯絡人 = repo客戶聯絡人.All()
-                .Where(p => p.職稱.Contains(key) || p.姓名.Contains(key) || p.客戶資料.客戶名稱.Contains(key))
-                .Include(客 => 客.客戶資料)
-                .OrderBy(p => p.姓名);
-            return View(客戶聯絡人);
-        }
 
         // GET: 客戶聯絡人/Details/5
         public ActionResult Details(int? id)
