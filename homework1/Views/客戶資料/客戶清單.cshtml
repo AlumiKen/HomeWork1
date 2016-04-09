@@ -6,21 +6,23 @@
 
 <h2>客戶清單</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.客戶名稱)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.聯絡人數量)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.銀行帳戶數量)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
+<table class="table" id="dataTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.客戶名稱)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.聯絡人數量)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.銀行帳戶數量)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+@*@foreach (var item in Model) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.客戶名稱)            
@@ -32,6 +34,48 @@
             @Html.DisplayFor(modelItem => item.銀行帳戶數量)
         </td>        
     </tr>
-}
+}*@
 
 </table>
+
+@*<input type="submit" id="btnClick" value="抓值" class="btn btn-default" />*@
+
+@section scripts{        
+    <script type="text/javascript">
+    $(document).ready(function () {
+        
+        //$("#btnClick").click(function () {
+        //$("#dataTable tbody tr").remove();
+
+    $.ajax({
+
+    type: 'GET',
+
+    url: '@Url.Action("客戶清單Ajax","客戶資料")',
+    dataType: 'json',
+    data: '',
+    success: function (data) {    
+
+    $.each(data, function (i, item) {
+    var rows =
+    "<tr>"
+    + "<td>" + item.客戶名稱 + "</td>"
+    + "<td>" + item.聯絡人數量 + "</td>"
+    + "<td>" + item.銀行帳戶數量 + "</td>"
+    + "</tr>";
+    $('#dataTable tbody').append(rows);
+    });
+
+    },
+    error: function (ex) {
+    var r = jQuery.parseJSON(response.responseText);
+    alert("Message: " + r.Message);
+    alert("StackTrace: " + r.StackTrace);
+    alert("ExceptionType: " + r.ExceptionType);
+    }
+    });
+    return false;
+        //})
+    });
+    </script>
+}

@@ -220,19 +220,20 @@ namespace homework1.Controllers
 
             repo客戶資料.UnitOfWork.Commit();
             return RedirectToAction("Index");
-        }
-
-        //public ActionResult 搜尋客戶資料(string key)
-        //{
-        //    var 客戶資料 = repo客戶資料.Query(key);
-        //    return View(客戶資料);
-        //}
+        }        
 
         public ActionResult 客戶清單()
         {
             var db客戶資料 = (客戶資料Entities)repo客戶資料.UnitOfWork.Context;
             var 客戶清單 = db客戶資料.CustomerListInfoViews;
             return View(客戶清單);
+        }
+
+        public JsonResult 客戶清單Ajax()
+        {
+            var db客戶資料 = (客戶資料Entities)repo客戶資料.UnitOfWork.Context;
+            var 客戶清單 = db客戶資料.CustomerListInfoViews;
+            return Json(客戶清單, JsonRequestBehavior.AllowGet);
         }
 
         public FileResult 匯出客戶資料()
