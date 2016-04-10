@@ -311,13 +311,23 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="about.html" />
+    <Content Include="blog.html" />
+    <Content Include="contact.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\PagedList.css" />
+    <Content Include="css\business-casual.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="img\bg.jpg" />
+    <Content Include="img\intro-pic.jpg" />
+    <Content Include="img\slide-1.jpg" />
+    <Content Include="img\slide-2.jpg" />
+    <Content Include="img\slide-3.jpg" />
+    <Content Include="index.html" />
     <Content Include="Models\CustomerInfoModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>CustomerInfoModel.edmx</DependentUpon>
@@ -417,6 +427,9 @@
     <Content Include="Views\客戶聯絡人\客戶聯絡人partialView.cshtml" />
     <Content Include="Views\Shared\CustomError.cshtml" />
     <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Views\Shared\_Layout2.cshtml" />
+    <Content Include="Views\Home\NewIndex.cshtml" />
+    <Content Include="Views\Home\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

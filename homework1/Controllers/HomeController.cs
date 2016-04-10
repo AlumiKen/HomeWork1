@@ -26,5 +26,10 @@ namespace homework1.Controllers
 
             return View();
         }
+
+        public ActionResult NewIndex()
+        {
+            return View();
+        }
     }
 }

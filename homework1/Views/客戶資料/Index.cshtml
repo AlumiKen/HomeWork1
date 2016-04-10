@@ -127,3 +127,9 @@
 
 @Html.PagedListPager(Model, page => Url.Action("Index", new { page , keyword = TempData["keyword"],客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["currentSort"] }))
 }
+
+@section breadcrumb{
+    <li>
+    <a href="@Url.Action("Index", "客戶資料")">客戶資料</a><i class="icon-angle-right"></i></li>
+    <li><a href="@Url.Action("Index", "客戶資料")">Index</a></li>
+}

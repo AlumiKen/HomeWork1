@@ -22,7 +22,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("首頁", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Ken's Home", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("關於", "About", "Home")</li>
                     <li>@Html.ActionLink("連絡方式", "Contact", "Home")</li>*@
                     @if (Context.User.IsInRole("board_admin"))
@@ -39,6 +39,19 @@
         </div>
     </div>
     <div class="container body-content">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="@Url.Action("Index", "Home")">Ken's Home</a>
+                <i class="icon-angle-right"></i>
+            </li>
+            @RenderSection("breadcrumb", false)
+            @if (!IsSectionDefined("breadcrumb"))
+            {
+                <li><a href="#">N/A</a></li>
+            }
+        </ul>
+
         @RenderBody()
         <hr />
         <footer>

@@ -132,8 +132,10 @@ namespace homework1.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email")] 客戶資料 客戶資料)
+        public ActionResult Create([Bind(Include = "Id,客戶名稱,統一編號,電話,傳真,地址,Email,Account,Password")] 客戶資料 客戶資料)
         {
+            客戶資料.Password = repo客戶資料.HashPassword(客戶資料.Account, 客戶資料.Password);
+
             if (ModelState.IsValid)
             {                
                 repo客戶資料.Add(客戶資料);
