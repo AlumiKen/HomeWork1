@@ -102,3 +102,10 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+@section breadcrumb{
+    <li>
+        <a href="@Url.Action("Index", "客戶資料")">客戶資料</a><i class="icon-angle-right"></i>
+    </li>
+    <li><a href="@Url.Action("Create", "客戶資料")">Create</a></li>
+}

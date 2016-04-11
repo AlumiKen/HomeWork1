@@ -78,3 +78,10 @@
         </div>
     }
 </div>
+
+@section breadcrumb{
+    <li>
+        <a href="@Url.Action("Index", "客戶資料")">客戶資料</a><i class="icon-angle-right"></i>
+    </li>
+    <li><a href="@Url.Action("Delete", "客戶資料")">Delete</a></li>
+}

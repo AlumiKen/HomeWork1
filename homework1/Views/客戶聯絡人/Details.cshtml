@@ -64,3 +64,10 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@section breadcrumb{
+    <li>
+        <a href="@Url.Action("Index", "客戶聯絡人")">客戶聯絡人</a><i class="icon-angle-right"></i>
+    </li>
+    <li><a href="@Url.Action("Details", "客戶聯絡人")">Details</a></li>
+}
