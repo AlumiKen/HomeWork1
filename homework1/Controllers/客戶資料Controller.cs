@@ -85,8 +85,6 @@ namespace homework1.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.客戶聯絡人清單 = repo客戶聯絡人.All().Where(p => p.客戶Id == id.Value).ToArray();
-                        
             return View(客戶資料);
         }
 
@@ -116,7 +114,6 @@ namespace homework1.Controllers
                 repo客戶聯絡人.UnitOfWork.Commit();
             }
             
-            ViewBag.客戶聯絡人清單 = repo客戶聯絡人.All().Where(p => p.客戶Id == id.Value).ToArray();
             return View(客戶資料);
         }
 

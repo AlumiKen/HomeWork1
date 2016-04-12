@@ -1,4 +1,4 @@
-﻿@model IPagedList<homework1.Models.客戶資料>
+﻿@model IEnumerable<homework1.Models.客戶資料>
 
 @{
     ViewBag.Title = "Index";
@@ -6,12 +6,35 @@
 
 @section scripts {
     <link href="~/Content/PagedList.css" rel="stylesheet" />
+    
+<script>
+    $(function () {
+        $('.pagination-container a').on('click', function () {
+            var href = $(this).attr('href');//找到分頁的超連結
+            var pageNumber = href.substring(href.indexOf('?page=') + 6);//抓出分頁值
+            document.form1.page.value = pageNumber;//把值塞到page隱藏欄位
+            document.form1.submit();
+            return false;
+        })
+    })
+
+    function SortOrder(name)
+    {        
+        document.form1.sortOrder.value = name + ' desc';
+        document.form1.submit();
+        return false;
+    }
+</script>
+
 }
 
 <h2>客戶資料管理</h2>
 
-@using (Html.BeginForm("Index", "客戶資料", FormMethod.Post))
+@using (Html.BeginForm("Index", "客戶資料", FormMethod.Get, new { name = "form1" }))
 {
+    @Html.Hidden("sortOrder")
+    @Html.Hidden("page")
+
 <p>    
     <table>
         <tr>
@@ -34,7 +57,7 @@
                                             | 客戶分類: 
                                         </td>
                                         <td>
-                                            @Html.DropDownList("客戶分類Id", null, "全部", htmlAttributes: new { @class = "form-control" })
+                                            @Html.DropDownList("客戶分類Id", null, "全部", htmlAttributes: new { @class = "form-control", onchange = "this.form.submit();" })
                                         </td>
                                     </tr>
                                 </table>
@@ -52,38 +75,32 @@
      </table>        
 </p>
 
-    @Html.Hidden("sortOrder", TempData["currentSort"])
+    
 <table class="table">
     <tr>
-        <th>            
-            @Html.ActionLink("客戶名稱", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["客戶名稱sort"] })
+        <th>                        
+            @Html.ActionLink("客戶名稱", "Index", null, new { onclick = "return SortOrder('客戶名稱');" })
         </th>
         <th>            
-            @Html.ActionLink("統一編號", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["統一編號sort"] })
+            @Html.ActionLink("統一編號", "Index", null, new { onclick = "return SortOrder('統一編號');" })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.FirstOrDefault().電話)*@
-            @Html.ActionLink("電話", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["電話sort"] })
+            @Html.ActionLink("電話", "Index", null, new { onclick = "return SortOrder('電話');" })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.FirstOrDefault().傳真)*@
-            @Html.ActionLink("傳真", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["傳真sort"] })
+            @Html.ActionLink("傳真", "Index", null, new { onclick = "return SortOrder('傳真');" })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.FirstOrDefault().地址)*@
-            @Html.ActionLink("地址", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["地址sort"] })
+            @Html.ActionLink("地址", "Index", null, new { onclick = "return SortOrder('地址');" })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.FirstOrDefault().Email)*@
-            @Html.ActionLink("Email", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["Emailsort"] })
+            @Html.ActionLink("Email", "Index", null, new { onclick = "return SortOrder('Email');" })
         </th>
         <th>
-            @*@Html.DisplayNameFor(model => model.FirstOrDefault().Account)*@
-            @Html.ActionLink("Account", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["Accountsort"] })
+            @Html.ActionLink("Account", "Index", null, new { onclick = "return SortOrder('Account');" })
         </th>        
         <th>
-            @*@Html.DisplayNameFor(model => model.FirstOrDefault().客戶分類.客戶分類名稱)*@
-            @Html.ActionLink("客戶分類名稱", "Index", new { page = TempData["page"], keyword = TempData["keyword"], 客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["客戶分類名稱sort"] })
+            @Html.ActionLink("客戶分類名稱", "Index", null, new { onclick = "return SortOrder('客戶分類名稱');" })
         </th>
         <th></th>
     </tr>
@@ -125,7 +142,7 @@
 
 </table>
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page , keyword = TempData["keyword"],客戶分類Id = TempData["客戶分類Id"], sortOrder = TempData["currentSort"] }))
+@Html.PagedListPager(Model as IPagedList, page => Url.Action("Index", new { page }))
 }
 
 @section breadcrumb{

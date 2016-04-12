@@ -88,11 +88,11 @@
 
 @using (Html.BeginForm("Details", "客戶資料"))
 {
-    if (ViewBag.客戶聯絡人清單.Length > 0)
+    if (Model.客戶聯絡人.Any())
     {
         <table class="table">
             @{
-                homework1.Models.客戶聯絡人[] data = ViewBag.客戶聯絡人清單;
+                homework1.Models.客戶聯絡人[] data = Model.客戶聯絡人.ToArray();
             }
 
             @if (data.Length > 0)
