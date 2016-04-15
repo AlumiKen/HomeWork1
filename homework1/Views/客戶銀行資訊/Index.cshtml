@@ -16,14 +16,14 @@
                 關鍵字 :
             </td>
             <td>
-                @using (Html.BeginForm("Index", "客戶銀行資訊", FormMethod.Post))
+                @using (Html.BeginForm("Index", "客戶銀行資訊", FormMethod.Get))
                 {
                     @Html.TextBox("key")
                     <input type="submit" value="搜尋" class="btn btn-default" />
                 }
             </td>
             <td>
-                @Html.ActionLink("匯出清單", "匯出客戶銀行資訊", "客戶銀行資訊")
+                <input type="submit" value="匯出清單" class="btn btn-default" formaction=@Url.Action("匯出客戶銀行資訊") />
             </td>
         </tr>
     </table>    

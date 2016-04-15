@@ -103,3 +103,9 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+@section breadcrumb{
+    <li>
+        <a href="@Url.Action("EditProfile", "Account")">個人資料</a><i class="icon-angle-right"></i>
+    </li>    
+}

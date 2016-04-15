@@ -358,6 +358,7 @@
     <Content Include="images\user.png" />
     <Content Include="images\visa.png" />
     <Content Include="img\bg.jpg" />
+    <Content Include="img\guest.png" />
     <Content Include="img\intro-pic.jpg" />
     <Content Include="img\Ken.jpg" />
     <Content Include="img\pkc.png" />
@@ -583,12 +584,18 @@
     <Content Include="Views\Shared\_Layout2.cshtml" />
     <Content Include="Views\Home\NewIndex.cshtml" />
     <Content Include="Views\Home\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶資料.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶資料.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶資料Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶聯絡人.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶聯絡人.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶資料Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\客戶銀行資訊.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\客戶銀行資訊.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Shared\DisplayTemplates\" />
-    <Folder Include="Views\Shared\EditorTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

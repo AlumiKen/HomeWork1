@@ -30,20 +30,7 @@ namespace homework1.Controllers
             if (keyword.Contains("@"))
             {
                 throw new InvalidOperationException("關鍵字含有特殊字元@");
-            }
-
-            int currentPage = page < 1 ? 1 : page;
-
-            TempData["currentSort"] = sortOrder;
-            TempData["職稱sort"] = sortOrder == "職稱" ? "職稱 desc" : "職稱";
-            TempData["姓名sort"] = sortOrder == "姓名" ? "姓名 desc" : "姓名";
-            TempData["Emailsort"] = sortOrder == "Email" ? "Email desc" : "Email";
-            TempData["電話sort"] = sortOrder == "電話" ? "電話 desc" : "電話";
-            TempData["手機sort"] = sortOrder == "手機" ? "手機 desc" : "手機";
-            TempData["客戶名稱sort"] = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
-
-            TempData["keyword"] = keyword;
-            TempData["職稱列表"] = 職稱列表;
+            }            
 
             var data = repo客戶聯絡人.searchKeyword(keyword)
                 .OrderBy(p => p.姓名).ToList();
@@ -72,7 +59,7 @@ namespace homework1.Controllers
                 }
             }
 
-            var result = data.ToPagedList(currentPage, pageSize);
+            var result = data.ToPagedList(page, pageSize);
 
             ViewBag.職稱列表 = new SelectList(repo客戶聯絡人.get職稱列表(), "", "");
 
@@ -196,14 +183,54 @@ namespace homework1.Controllers
             return PartialView(客戶聯絡人);
         }
 
-        public FileResult 匯出聯絡人資料()
+        [HttpPost]
+        public ActionResult 客戶聯絡人partialView(IList<批次更新客戶聯絡人> data, int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            客戶資料 客戶資料 = repo客戶資料.Find(id.Value);
+            if (客戶資料 == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                foreach (var item in data)
+                {
+                    var 客戶聯絡人 = repo客戶聯絡人.Find(item.Id);
+                    客戶聯絡人.職稱 = item.職稱;
+                    客戶聯絡人.手機 = item.手機;
+                    客戶聯絡人.電話 = item.電話;
+                }
+
+                repo客戶聯絡人.UnitOfWork.Commit();
+                return RedirectToAction("Details", "客戶資料");
+            }
+            
+            var result = repo客戶聯絡人.All().Where(p => p.客戶Id == id).Include(客 => 客.客戶資料).OrderBy(p => p.姓名);
+            return PartialView(result);
+        }
+
+        public FileResult 匯出聯絡人資料(string 職稱列表, string keyword = "")
         {
             //建立Excel文件
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             //新增sheet
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
             //取得匯出資料List
-            List<客戶聯絡人> dataList = repo客戶聯絡人.All().ToList();
+            var data = repo客戶聯絡人.searchKeyword(keyword)
+                .OrderBy(p => p.姓名).ToList();
+
+            if (!string.IsNullOrEmpty(職稱列表))
+            {
+                data = data.Where(p => p.職稱 == 職稱列表).ToList();
+            }
+
+            List<客戶聯絡人> dataList = data;
+
             //给sheet1添加第一行的標題列
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
             row1.CreateCell(0).SetCellValue("職稱");

@@ -21,29 +21,12 @@ namespace homework1.Controllers
         // GET: 客戶資料
         public ActionResult Index(int? 客戶分類Id, string sortOrder, int page = 1, string keyword = "")
         {
-            int currentPage = page < 1 ? 1 : page;
-
-            TempData["currentSort"] = sortOrder;
-            TempData["客戶名稱sort"] = sortOrder == "客戶名稱" ? "客戶名稱 desc" : "客戶名稱";
-            TempData["統一編號sort"] = sortOrder == "統一編號" ? "統一編號 desc" : "統一編號";
-            TempData["電話sort"] = sortOrder == "電話" ? "電話 desc" : "電話";
-            TempData["傳真sort"] = sortOrder == "傳真" ? "傳真 desc" : "傳真";
-            TempData["地址sort"] = sortOrder == "地址" ? "地址 desc" : "地址";
-            TempData["Emailsort"] = sortOrder == "Email" ? "Email desc" : "Email";
-            TempData["Accountsort"] = sortOrder == "Account" ? "Account desc" : "Account";
-            TempData["客戶分類名稱sort"] = sortOrder == "客戶分類名稱" ? "客戶分類名稱 desc" : "客戶分類名稱";
-
-            //把查詢的參數存到TempData
-            TempData["page"] = page;
-            TempData["keyword"] = keyword;
-            TempData["客戶分類Id"] = 客戶分類Id;
-
             var data = repo客戶資料.searchKeyword(keyword)
                 .OrderBy(p => p.客戶名稱).ToList();
             
             if (客戶分類Id.HasValue)
             {                
-                data = data.Where(p => p.客戶分類Id == 客戶分類Id).ToList();                
+                data = data.Where(p => p.客戶分類Id == 客戶分類Id).ToList();
             }
 
             if (!string.IsNullOrEmpty(sortOrder))
@@ -65,7 +48,7 @@ namespace homework1.Controllers
                 }
             }
             
-            var result = data.ToPagedList(currentPage, pageSize);
+            var result = data.ToPagedList(page, pageSize);            
 
             ViewBag.客戶分類Id = new SelectList(repo客戶分類.All(), "Id", "客戶分類名稱", 客戶分類Id);
 
@@ -180,9 +163,7 @@ namespace homework1.Controllers
             }
 
             if (TryUpdateModel(客戶資料, "Id,客戶名稱,統一編號,電話,傳真,地址,Email,Account,客戶分類Id".Split(new char[] { ',' })))
-            {
-                //var db客戶資料 = repo客戶資料.UnitOfWork.Context;
-                //db客戶資料.Entry(客戶資料).State = EntityState.Modified;
+            {                
                 repo客戶資料.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
@@ -211,9 +192,6 @@ namespace homework1.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            //db.Database.ExecuteSqlCommand(@"UPDATE dbo.客戶聯絡人 SET IsDelete = 1 WHERE 客戶Id = @p0", id);
-            //db.Database.ExecuteSqlCommand(@"UPDATE dbo.客戶銀行資訊 SET IsDelete = 1 WHERE 客戶Id = @p0", id);
-
             客戶資料 客戶資料 = repo客戶資料.Find(id);
             repo客戶資料.Delete(客戶資料);
 
@@ -235,14 +213,21 @@ namespace homework1.Controllers
             return Json(客戶清單, JsonRequestBehavior.AllowGet);
         }
 
-        public FileResult 匯出客戶資料()
+        public FileResult 匯出客戶資料(int? 客戶分類Id, string keyword = "")
         {            
             //建立Excel文件
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             //新增sheet
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
             //取得匯出資料List
-            List<客戶資料> dataList = repo客戶資料.All().ToList();
+            var data = repo客戶資料.searchKeyword(keyword).OrderBy(p => p.客戶名稱).ToList();
+
+            if (客戶分類Id.HasValue)
+            {
+                data = data.Where(p => p.客戶分類Id == 客戶分類Id).ToList();
+            }
+
+            List<客戶資料> dataList = data;
             //给sheet1添加第一行的標題列
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
             row1.CreateCell(0).SetCellValue("客戶名稱");

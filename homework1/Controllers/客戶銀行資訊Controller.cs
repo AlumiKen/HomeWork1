@@ -17,7 +17,7 @@ namespace homework1.Controllers
         // GET: 客戶銀行資訊
         public ActionResult Index()
         {
-            var 客戶銀行資訊 = repo客戶銀行資訊.All().Include(客 => 客.客戶資料);
+            var 客戶銀行資訊 = repo客戶銀行資訊.All();
             return View(客戶銀行資訊.ToList());
         }
 
@@ -25,11 +25,7 @@ namespace homework1.Controllers
         [HttpPost]
         public ActionResult Index(string key)
         {
-            //var 客戶銀行資訊 = db.Database.SqlQuery<客戶銀行資訊>(
-            //    @"SELECT * FROM dbo.客戶銀行資訊 WHERE 銀行名稱 LIKE @p0 OR 銀行代碼 LIKE @p0 OR 分行代碼 LIKE @p0 OR 帳戶名稱 LIKE @p0 OR 帳戶號碼 LIKE @p0", "%" + key + "%").OrderBy(p => p.帳戶名稱);
-            var 客戶銀行資訊 = repo客戶銀行資訊.All()
-                .Where(p => p.銀行名稱.Contains(key) || p.帳戶名稱.Contains(key) || p.帳戶號碼.Contains(key) || p.銀行代碼.ToString().Contains(key) || p.分行代碼.ToString().Contains(key) || p.客戶資料.客戶名稱.Contains(key))
-                .Include(客 => 客.客戶資料);
+            var 客戶銀行資訊 = repo客戶銀行資訊.searchKey(key);
             return View(客戶銀行資訊);
         }
 
