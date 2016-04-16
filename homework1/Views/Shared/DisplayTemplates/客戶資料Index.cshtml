@@ -147,25 +147,3 @@
 
     @Html.PagedListPager(Model as IPagedList, page => Url.Action("Index", new { page }))
 }
-
-PagedListPager(Model as IPagedList, page => Url.Action("Index", new { page }))
-{
-    會先處理傳入的Model,產生出畫面上要顯示的頁碼List<int>　pageList
-    例如
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ..., >, >>
-    <<, < 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ..., >, >>
-
-    產生出來的每個頁碼html會長成這樣
-    <a href="PageUrl">頁碼</a>
-
-    foreach (var page in pageList)
-    {
-        對每個頁碼都會呼叫Func函數，回傳我們設定好的回傳值expression
-        把回傳值塞到頁碼的href內的PageUrl處
-
-        generalPageUrl(page)
-        {
-            return Url.Action("Index", new { page })
-        }
-    }
-}

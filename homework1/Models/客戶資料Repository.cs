@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Text;
 using System.Security.Cryptography;
+using System.Data.Entity;
 
 namespace homework1.Models
 {   

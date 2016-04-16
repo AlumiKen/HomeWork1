@@ -35,7 +35,10 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="~/Home/Index" class="site_title"><i class="fa fa-paw"></i> <span>Ken's Home</span></a>
+                        <a href="~/Home/Index" class="site_title">
+                            <img src="~/img/pikaBall.jpg" class="img-circle profile_pic" style="width:30px;margin-top:13px" />@*<i class="fa fa-paw"></i>*@
+                            <span style="margin-left:5px">Ken's Home</span>
+                        </a>
                     </div>
                     <div class="clearfix"></div>
                     <!-- menu prile quick info -->
@@ -462,7 +465,7 @@
 
         @Scripts.Render("~/bundles/jquery")
         @*@Scripts.Render("~/bundles/bootstrap")*@
-        @RenderSection("scripts", required: false)
+        @RenderSection("scripts", required: false)        
 </body>
 
 </html>
