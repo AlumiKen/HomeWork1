@@ -210,6 +210,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\api\api錯誤捕捉Attribute.cs" />
+    <Compile Include="Controllers\api\客戶資料ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\客戶分類Controller.cs" />
@@ -609,7 +611,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\api\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
