@@ -81,6 +81,7 @@ namespace homework1.Controllers
             return View();
         }
 
+        [Authorize(Roles = "gold_member")]
         public ActionResult EditProfile()
         {
             var 客戶資料 = repo客戶資料.GetByAccount(User.Identity.Name);
@@ -89,6 +90,7 @@ namespace homework1.Controllers
             return View(客戶資料);
         }
 
+        [Authorize(Roles = "gold_member")]
         [HttpPost]
         public ActionResult EditProfile(FormCollection form)
         {
